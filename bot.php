@@ -42,7 +42,7 @@ while(true){
 		echo("\nBought " . $usd_balance/$vwap . "BTC at $" . $vwap . " per BTC.");
 		//echo "\noldvwap*1.05: " . $oldvwap*1.05;
 	}
-	echo("\n\n To donate BTC: 14DFnrDrAHCfvoh6QmzZPKmgBpsD37xrGM")
+	echo("\n\n To donate BTC: 14DFnrDrAHCfvoh6QmzZPKmgBpsD37xrGM");
 	sleep(360);
 }
 
