@@ -14,10 +14,11 @@ include("gox.class.php");
 include("settings.php");
 
 $gox = new Gox($APIKEY, $APISECRET);
-$change = array(0, 0, 0, 0, 0);		// Array to hold changes in the average BTC value.
-$ticker = $gox->ticker();		// Get the current ticker data.
-$vwap = $ticker['ticker']['vwap']; 	// Get initial average price.
-$run = 1;				// Iteration counter.
+$change = array(0, 0, 0, 0, 0);				// Array to hold changes in the average BTC value.
+$ticker = $gox->ticker();					// Get the current ticker data.
+$vwap = $ticker['ticker']['vwap']; 			// Get initial average price.
+$run = 1;									// Iteration counter.
+
 //exit if APIKEY or APISECRET is not given
 if($APIKEY == ''){ 
 	echo "FILL IN YOUR API KEY AND SECRET";
@@ -44,15 +45,15 @@ while(true){
 	$last = $ticker['ticker']['last'];		
 
 	$oldvwap = $vwap;
-	$vwap = $ticker['ticker']['vwap']; // Average price
+	$vwap = $ticker['ticker']['vwap']; 		// Average price
 	$change[0] = $change[1];
 	$change[1] = $change[2];
 	$change[2] = $change[3];
 	$change[3] = $change[4];
 	$change[4] = $vwap-$oldvwap;
 
-	$origionalbalance = ($origional_btc_balance*$vwap) + $origional_usd_balance; //amount of money (in USD) you had when you started the program, done here to account for variations in BTC/USD excahnge rate
-	$balance = ($btc_balance*$vwap) + $usd_balance; //amount of money you have (in USD)
+	$origionalbalance = ($origional_btc_balance*$vwap) + $origional_usd_balance; 	//amount of money (in USD) you had when you started the program, done here to account for variations in BTC/USD excahnge rate
+	$balance = ($btc_balance*$vwap) + $usd_balance; 								//amount of money you have (in USD)
 	$profitUSD = $balance - $origionalbalance;
 	$profitBTC = $profitUSD / $vwap;
 	
@@ -76,7 +77,7 @@ while(true){
 	}
 	
 	$run++;
-	sleep($UPDATE_INTERVAL);
+	sleep($UPDATE_INTERVAL);	
 }
 ?>
 
