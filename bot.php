@@ -80,4 +80,3 @@ while(true){
 	sleep($UPDATE_INTERVAL);	
 }
 ?>
-

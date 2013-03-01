@@ -1,0 +1,193 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pro",
+				"profitBTC"
+			],
+			[
+				"clear",
+				"clearscreen"
+			],
+			[
+				"o",
+				"origionalbalance"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "#!/usr/bin/env php\n<?php\nfunction clearscreen(){\n	$rows=100;\n	$rowscleared = 0;\n	while($rowscleared < $rows){\n		echo \"\\n\";\n		$rowscleared++;\n	}\n}\n\n\ninclude(\"gox.class.php\");\ninclude(\"settings.php\");\n\n$gox = new Gox($APIKEY, $APISECRET);\n$change = array(0, 0, 0, 0, 0);				// Array to hold changes in the average BTC value.\n$ticker = $gox->ticker();					// Get the current ticker data.\n$vwap = $ticker['ticker']['vwap']; 			// Get initial average price.\n$run = 1;									// Iteration counter.\n\n//exit if APIKEY or APISECRET is not given\nif($APIKEY == ''){ \n	echo \"FILL IN YOUR API KEY AND SECRET\";\n	exit();\n}\n\n$info = $gox->getInfo();\n$origional_btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);\n$origional_usd_balance = floatval($info['Wallets']['USD']['Balance']['value']);\n\n\n\n\nwhile(true){\n	$info = $gox->getInfo();\n	$ticker = $gox->ticker();\n	$btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);\n	$usd_balance = floatval($info['Wallets']['USD']['Balance']['value']);\n\n	\n	\n	$high = $ticker['ticker']['high'];\n	$low = $ticker['ticker']['low'];\n	$last = $ticker['ticker']['last'];		\n\n	$oldvwap = $vwap;\n	$vwap = $ticker['ticker']['vwap']; 		// Average price\n	$change[0] = $change[1];\n	$change[1] = $change[2];\n	$change[2] = $change[3];\n	$change[3] = $change[4];\n	$change[4] = $vwap-$oldvwap;\n\n	$origionalbalance = ($origional_btc_balance*$vwap) + $origional_usd_balance; 	//amount of money (in USD) you had when you started the program, done here to account for variations in BTC/USD excahnge rate\n	$balance = ($btc_balance*$vwap) + $usd_balance; 								//amount of money you have (in USD)\n	$profitUSD = $balance - $origionalbalance;\n	$profitBTC = $profitUSD / $vwap;\n	\n	clearscreen();\n\n	echo \"BTC Balance: \" . $btc_balance . \"\\nUSD Balance: $\" . $usd_balance . \"\\n\";\n        echo \"\\nAverage: $\". $vwap . \"\\nHigh: $\" . $high . \"\\nLow: $\" . $low . \"\\nLast: $\" . $last;\n        echo \"\\nRun: \" . $run;\n        echo \"\\nPrice Change: \" . $change[0] . ', ' . $change[1] . ', ' . $change[2] . ', ' . $change[3] . ', ' . $change[4] ;\n        echo \"\\nProfit in USD: \" . $profitUSD . \"\\nProfit in BTC: \" . $profitBTC;\n\n	if($change[0] > $change[1] && $change[1] > $change[2] && $change[2] > $change[3] && $change[3] > $change[4] ){\n		var_dump($gox->sellBTC($btc_balance,$vwap,\"BTC\" . $vwap . \" per BTC.\"));\n		echo(\"\\nSold \" . $btc_balance . \"BTC at $\");\n		\n	}\n	\n	if($change[0] < $change[1] && $change[1] < $change[2] && $change[2] < $change[3] && $change[3] < $change[4] ){\n		$gox->buyBTC($usd_balance/$vwap,$vwap,\"BTC\");\n		echo(\"\\nBought \" . $usd_balance/$vwap . \"BTC at $\" . $vwap . \" per BTC.\");\n	}\n	\n	$run++;\n	sleep($UPDATE_INTERVAL);	\n}\n?>",
+			"file": "bot.php",
+			"file_size": 2756,
+			"file_write_time": 1362166592000000,
+			"settings":
+			{
+				"buffer_size": 2671,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 364.0,
+		"selected_items":
+		[
+			[
+				"rot",
+				"Rot13 Selection"
+			],
+			[
+				"",
+				"Rot13 Selection"
+			]
+		],
+		"width": 440.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/jeandre/needed.txt",
+		"/home/jeandre/aurclone"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "bot.php",
+					"settings":
+					{
+						"buffer_size": 2671,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1119,
+								1119
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 312.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}
