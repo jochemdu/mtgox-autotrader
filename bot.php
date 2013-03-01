@@ -17,7 +17,6 @@ $change = array(0, 0, 0, 0, 0);		// Array to hold changes in the average BTC val
 $ticker = $gox->ticker();		// Get the current ticker data.
 $vwap = $ticker['ticker']['vwap']; 	// Get initial average price.
 $run = 1;				// Iteration counter.
-echo $APIKEY . ' ' . $APISECRET;
 //exit if APIKEY or APISECRET is not given
 if($APIKEY == ''){ 
 	echo "FILL IN YOUR API KEY AND SECRET";
@@ -41,24 +40,22 @@ while(true){
 	
 	$high = $ticker['ticker']['high'];
 	$low = $ticker['ticker']['low'];
-	$last = $ticker['ticker']['last'];
-
-	$change[0] = $change[1];
-	$change[1] = $change[2];
-	$change[2] = $change[3];
-	$change[3] = $change[4];	
+	$last = $ticker['ticker']['last'];		
 
 	$oldvwap = $vwap;
 	$vwap = $ticker['ticker']['vwap']; // Average price
 	$width = $high - $low;
 
-
-	
+	$change[0] = $change[1];
+	$change[1] = $change[2];
+	$change[2] = $change[3];
+	$change[3] = $change[4];
 	$change[4] = $vwap-$oldvwap;
 
 	$origionalbalance = ($origional_btc_balance*$vwap) + $origional_usd_balance; //amount of money (in USD) you had when you started the program, done here to account for variations in BTC/USD excahnge rate
 	$balance = ($btc_balance*$vwap) + $usd_balance; //amount of money you have (in USD)
-	$profit = $balance - $origionalbalance;
+	$profitUSD = $balance - $origionalbalance;
+	$profitBTC = $profitUSD / $vwap;
 	
 	clearscreen();
 	
@@ -66,7 +63,7 @@ while(true){
         echo "\nAverage: $". $vwap . "\nHigh: $" . $high . "\nLow: $" . $low . "\nLast: $" . $last;
         echo "\nRun: " . $run;
         echo "\nPrice Change: " . $change[0] . ', ' . $change[1] . ', ' . $change[2] . ', ' . $change[3] . ', ' . $change[4] ;
-        echo "\nProfit: " . $profit;
+        echo "\nProfit in USD: " . $profitUSD . "\nProfit in BTC: " . $profitBTC;
 
 	if($change[0] > $change[1] && $change[1] > $change[2] && $change[2] > $change[3] && $change[3] > $change[4] ){
 		var_dump($gox->sellBTC($btc_balance,$vwap,"BTC" . $vwap . " per BTC."));
@@ -77,7 +74,6 @@ while(true){
 	if($change[0] < $change[1] && $change[1] < $change[2] && $change[2] < $change[3] && $change[3] < $change[4] ){
 		$gox->buyBTC($usd_balance/$vwap,$vwap,"BTC");
 		echo("\nBought " . $usd_balance/$vwap . "BTC at $" . $vwap . " per BTC.");
-		//echo "\noldvwap*1.05: " . $oldvwap*1.05;
 	}
 	
 	$run++;
