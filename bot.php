@@ -36,7 +36,7 @@ while(true){
 	$btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);
 	$usd_balance = floatval($info['Wallets']['USD']['Balance']['value']);
 
-	echo "BTC Balance: " . $btc_balance . "\nUSD Balance: " . $usd_balance . "\n";
+	
 	
 	$high = $ticker['ticker']['high'];
 	$low = $ticker['ticker']['low'];
@@ -44,8 +44,6 @@ while(true){
 
 	$oldvwap = $vwap;
 	$vwap = $ticker['ticker']['vwap']; // Average price
-	$width = $high - $low;
-
 	$change[0] = $change[1];
 	$change[1] = $change[2];
 	$change[2] = $change[3];
@@ -58,7 +56,7 @@ while(true){
 	$profitBTC = $profitUSD / $vwap;
 	
 	clearscreen();
-	
+
 	echo "BTC Balance: " . $btc_balance . "\nUSD Balance: $" . $usd_balance . "\n";
         echo "\nAverage: $". $vwap . "\nHigh: $" . $high . "\nLow: $" . $low . "\nLast: $" . $last;
         echo "\nRun: " . $run;
@@ -77,7 +75,6 @@ while(true){
 	}
 	
 	$run++;
-	echo("\n\n To donate BTC: 14DFnrDrAHCfvoh6QmzZPKmgBpsD37xrGM");
 	sleep($UPDATE_INTERVAL);
 }
 ?>
