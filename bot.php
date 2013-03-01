@@ -1,8 +1,6 @@
 <?php
 function clearscreen(){
-	newt_init();
-	newt_get_screen_size($cols, $rows);
-	newt_finished();
+	$rows=100;
 	$rowscleared = 0;
 	while($rowscleared < $rows){
 		echo "\n";
@@ -38,7 +36,6 @@ while(true){
 	$ticker = $gox->ticker();
 	$btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);
 	$usd_balance = floatval($info['Wallets']['USD']['Balance']['value']);
-	$origionalbalance = $origional_btc_balance + ($origional_usd_balance*$vwap); //amount of money you had when you started the program, done here to account for variations in BTC/USD excahnge rate
 
 	echo "BTC Balance: " . $btc_balance . "\nUSD Balance: " . $usd_balance . "\n";
 	
@@ -59,10 +56,11 @@ while(true){
 	
 	$change[4] = $vwap-$oldvwap;
 
-	$balance = $btc_balance + ($usd_balance*$vwap); //amount of money you have
+	$origionalbalance = ($origional_btc_balance*$vwap) + $origional_usd_balance; //amount of money (in USD) you had when you started the program, done here to account for variations in BTC/USD excahnge rate
+	$balance = ($btc_balance*$vwap) + $usd_balance; //amount of money you have (in USD)
 	$profit = $balance - $origionalbalance;
 	
-	passthru(clear);
+	clearscreen();
 	
 	echo "BTC Balance: " . $btc_balance . "\nUSD Balance: $" . $usd_balance . "\n";
         echo "\nAverage: $". $vwap . "\nHigh: $" . $high . "\nLow: $" . $low . "\nLast: $" . $last;
