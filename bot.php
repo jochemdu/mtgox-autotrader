@@ -30,7 +30,7 @@ $origional_btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);
 $origional_usd_balance = floatval($info['Wallets']['USD']['Balance']['value']);
 
 
-
+$file = "data.csv";
 
 while(true){
 	$info = $gox->getInfo();
@@ -66,7 +66,7 @@ while(true){
         echo "\nProfit in USD: " . $profitUSD . "\nProfit in BTC: " . $profitBTC;
 
 	if($change[0] > $change[1] && $change[1] > $change[2] && $change[2] > $change[3] && $change[3] > $change[4] ){
-		var_dump($gox->sellBTC($btc_balance,$vwap,"BTC" . $vwap . " per BTC."));
+		$gox->sellBTC($btc_balance,$vwap,"BTC" . $vwap . " per BTC.");
 		echo("\nSold " . $btc_balance . "BTC at $");
 		
 	}
@@ -77,6 +77,11 @@ while(true){
 	}
 	
 	$run++;
+	$fh = fopen($file, 'a');
+	$logdata = $vwap . "," . $oldvwap . "," 
+. $profitUSD . "\n";
+	fwrite($fh, $logdata);
+	fclose($fh);
 	sleep($UPDATE_INTERVAL);	
 }
 ?>
