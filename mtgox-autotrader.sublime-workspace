@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"pr",
+				"profitUSD"
+			],
+			[
 				"pro",
 				"profitBTC"
 			],
@@ -23,7 +27,7 @@
 			"file": "bot.php",
 			"settings":
 			{
-				"buffer_size": 2671,
+				"buffer_size": 2808,
 				"line_ending": "Windows"
 			}
 		}
@@ -104,15 +108,15 @@
 					"file": "bot.php",
 					"settings":
 					{
-						"buffer_size": 2671,
+						"buffer_size": 2808,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1119,
-								1119
+								2776,
+								2776
 							]
 						],
 						"settings":
@@ -121,7 +125,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 312.0,
+						"translation.y": 362.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

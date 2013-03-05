@@ -5,4 +5,10 @@ $APISECRET = '';
 
 // Market Update Interval
 $UPDATE_INTERVAL = 360;
+
+//minimum confidence(percent)
+$minconfidence = 50;
+
+//amount of records to look at
+$records = 5;
 ?>

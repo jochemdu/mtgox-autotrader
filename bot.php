@@ -28,9 +28,12 @@ if($APIKEY == ''){
 $info = $gox->getInfo();
 $origional_btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);
 $origional_usd_balance = floatval($info['Wallets']['USD']['Balance']['value']);
+fwrite($fh, "confidence,profitUSD");
 
 
-$file = "data.csv";
+$fh = fopen($file, 'w');
+fclose($fh);
+
 
 while(true){
 	$info = $gox->getInfo();
@@ -46,11 +49,21 @@ while(true){
 
 	$oldvwap = $vwap;
 	$vwap = $ticker['ticker']['vwap']; 		// Average price
-	$change[0] = $change[1];
-	$change[1] = $change[2];
-	$change[2] = $change[3];
-	$change[3] = $change[4];
-	$change[4] = $vwap-$oldvwap;
+	for($foo = 0; $foo <= $records; $foo++){
+		$change[$foo] = $change[($foo + 1)];
+	}
+	$change[$records] = $vwap-$oldvwap;
+
+	$confidencecount = 0;
+	for($foo = 0;$foo < $records; $foo++){
+		if($change[$foo] > 0){
+			$confidencecount++;		
+		}
+		if($change[$foo] < 0){
+			$confidencecount--;
+		}
+	}
+	$confidence = ($confidencecount / $records) * 100;
 
 	$origionalbalance = ($origional_btc_balance*$vwap) + $origional_usd_balance; 	//amount of money (in USD) you had when you started the program, done here to account for variations in BTC/USD excahnge rate
 	$balance = ($btc_balance*$vwap) + $usd_balance; 								//amount of money you have (in USD)
@@ -62,24 +75,24 @@ while(true){
 	echo "BTC Balance: " . $btc_balance . "\nUSD Balance: $" . $usd_balance . "\n";
         echo "\nAverage: $". $vwap . "\nHigh: $" . $high . "\nLow: $" . $low . "\nLast: $" . $last;
         echo "\nRun: " . $run;
-        echo "\nPrice Change: " . $change[0] . ', ' . $change[1] . ', ' . $change[2] . ', ' . $change[3] . ', ' . $change[4] ;
+        echo "\nPrice Change: " . $change[0] . ', ' . $change[1] . ', ' . $change[2] . ', ' . $change[3] . ', ' . $change[4] . ', ' . $change[5];
         echo "\nProfit in USD: " . $profitUSD . "\nProfit in BTC: " . $profitBTC;
-
-	if($change[0] > $change[1] && $change[1] > $change[2] && $change[2] > $change[3] && $change[3] > $change[4] ){
+        echo "\nConfidencecount: " . $confidencecount . "\nConfidence: " . $confidence . "\n";
+        $minus20 = 0 -20;
+	if($confidence < -20.0){
 		$gox->sellBTC($btc_balance,$vwap,"BTC" . $vwap . " per BTC.");
-		echo("\nSold " . $btc_balance . "BTC at $");
+		echo("\nSold " . $btc_balance . "BTC at $" . $vwap);
 		
 	}
 	
-	if($change[0] < $change[1] && $change[1] < $change[2] && $change[2] < $change[3] && $change[3] < $change[4] ){
+	if($confidence > 20.0){
 		$gox->buyBTC($usd_balance/$vwap,$vwap,"BTC");
 		echo("\nBought " . $usd_balance/$vwap . "BTC at $" . $vwap . " per BTC.");
 	}
 	
 	$run++;
 	$fh = fopen($file, 'a');
-	$logdata = $vwap . "," . $oldvwap . "," 
-. $profitUSD . "\n";
+	$logdata = $confidence . "," . $profitUSD . "\n" ;
 	fwrite($fh, $logdata);
 	fclose($fh);
 	sleep($UPDATE_INTERVAL);	
