@@ -9,21 +9,23 @@ function clearscreen(){
 	}
 }
 
+echo "mtgox-autotrader \n";
+echo "https://github.com/theblazehen/mtgox-autotrader \n\n";
 
 include("gox.class.php");
 include("settings.php");
+
+//exit if APIKEY or APISECRET is not given
+if($APIKEY == ''){
+        echo "WARNING: FILL IN YOUR API KEY AND SECRET.\n";
+        exit();
+}
 
 $gox = new Gox($APIKEY, $APISECRET);
 $change = array(0, 0, 0, 0, 0);				// Array to hold changes in the average BTC value.
 $ticker = $gox->ticker();					// Get the current ticker data.
 $vwap = $ticker['ticker']['vwap']; 			// Get initial average price.
 $run = 1;									// Iteration counter.
-
-//exit if APIKEY or APISECRET is not given
-if($APIKEY == ''){ 
-	echo "FILL IN YOUR API KEY AND SECRET";
-	exit();
-}
 
 $info = $gox->getInfo();
 $origional_btc_balance = floatval($info['Wallets']['BTC']['Balance']['value']);
